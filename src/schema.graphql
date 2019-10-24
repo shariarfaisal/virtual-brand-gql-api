@@ -1,0 +1,197 @@
+# import UserOrderByInput, BrandOrderByInput, ProductOrderByInput, CategoryOrderByInput from './generated/prisma.graphql'
+
+type Query{
+  users(query: String,first: Int,skip: Int,after: String,orderBy: UserOrderByInput): [User!]!
+  brands(query: String,first: Int,skip: Int,after: String,orderBy: BrandOrderByInput): [Brand!]!
+  products(query: String,first: Int,skip: Int,after: String,orderBy: ProductOrderByInput): [Product!]!
+  categories(query: String,first: Int,skip: Int,after: String,orderBy: CategoryOrderByInput): [Category!]!
+
+  user: User!
+  brand: Brand!
+  product(id:ID!): Product!
+  category(id:ID!): Category!
+}
+
+type Mutation{
+  createUser(data: CreateUserInput): AuthPayload!
+  login(email: String!,password: String!): AuthPayload!
+  updateUser(data: UpdateUserInput): User!
+  deleteUser: User!
+
+  createBrand(data: CreateBrandInput): BrandAuthPayload!
+  loginBrand(username: String!,password: String!): BrandAuthPayload!
+  updateBrand(data: UpdateBrandInput): Brand!
+  deleteBrand: Brand!
+
+  createProduct(data: CreateProductInput): Product!
+  updateProduct(id: ID!,data: UpdateProductInput): Product!
+  deleteProduct(id: ID!): Product!
+
+  createCategory(data: CreateCategoryInput): Category!
+  updateCategory(id: ID!,data: UpdateCategoryInput): Category!
+  deleteCategory(id:ID!): Category!
+
+  createSubCategory(data: CreateSubCategoryInput): SubCategory!
+  updateSubCategory(id: ID!,data: UpdateSubCategoryInput): SubCategory!
+  deleteSubCategory(id:ID!): SubCategory!
+}
+
+type Subscription{
+  user: UserSubPayload!
+  brand: BrandSubPayload!
+  product: ProductSubPayload!
+  category: CategorySubPayload!
+  subCategory: SubCategorySubPayload!
+
+}
+
+enum MutationType{
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type UserSubPayload{
+  mutation: MutationType
+  node: User
+}
+
+type BrandSubPayload{
+  mutation: MutationType
+  node: Brand
+}
+
+type ProductSubPayload{
+  mutation: MutationType
+  node: Product!
+}
+
+type CategorySubPayload{
+  mutation: MutationType
+  node: Category!
+}
+
+type SubCategorySubPayload{
+  mutation: MutationType
+  node: SubCategory!
+}
+
+type AuthPayload{
+  token: String!
+  user: User!
+}
+
+type BrandAuthPayload{
+  token: String!
+  brand: Brand!
+}
+
+input CreateBrandInput{
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
+input CreateUserInput{
+  name: String!
+  email: String!
+  address: String!
+  city: String!
+  country: String!
+  password: String!
+}
+
+input CreateProductInput{
+  title: String!
+  description: String!
+  published: Boolean!
+  subCategory: ID!
+  price: Int!
+}
+
+input CreateCategoryInput{
+  name: String!
+}
+
+input CreateSubCategoryInput{
+  name: String!
+  category: ID!
+}
+
+input UpdateUserInput{
+  name: String
+  email: String
+  address: String
+  city: String
+  country: String
+  password: String
+}
+
+input UpdateBrandInput{
+  name: String
+  email: String
+  username: String
+  password: String
+}
+
+input UpdateProductInput{
+  title: String
+  description: String
+  price: Int
+  published: Boolean
+}
+
+input UpdateCategoryInput{
+  name: String!
+}
+
+input UpdateSubCategoryInput{
+  name: String!
+}
+
+type Brand{
+  id: ID!
+  name: String!
+  username: String
+  email: String
+  products: [Product!]!
+  updatedAt: String
+  createdAt: String
+}
+
+type User{
+  id: ID!
+  name: String!
+  email: String
+  address: String!
+  city: String!
+  country: String!
+}
+
+type Product{
+  id: ID!
+  title: String!
+  description: String!
+  price: Int!
+  published: Boolean!
+  category: Category!
+  subCategory: SubCategory!
+  brand: Brand!
+  updatedAt: String
+  createdAt: String
+}
+
+type Category{
+  id: ID!
+  name: String!
+  subCategories: [SubCategory!]!
+  products: [Product!]!
+}
+
+type SubCategory{
+  id: ID!
+  name: String!
+  category: Category!
+  products: [Product!]!
+}

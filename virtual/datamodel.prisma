@@ -1,0 +1,47 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  address: String!
+  city: String!
+  country: String!
+  password: String!
+}
+
+type Product{
+  id: ID! @id
+  title: String!
+  description: String!
+  price: Int!
+  published: Boolean!
+  category: Category! @relation(name: "CategoryToProduct",onDelete: SET_NULL)
+  subCategory: SubCategory! @relation(name: "SubCategoryToProduct",onDelete: SET_NULL)
+  brand: Brand! @relation(name: "BrandToProduct",onDelete: SET_NULL)
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type Category{
+  id: ID! @id
+  name: String!
+  subCategories: [SubCategory!]! @relation(name: "CategoryToSubCategory",onDelete: CASCADE)
+  products: [Product!]! @relation(name: "CategoryToProduct",onDelete: CASCADE)
+}
+
+type SubCategory{
+  id: ID! @id
+  name: String!
+  category: Category! @relation(name: "CategoryToSubCategory",onDelete: SET_NULL)
+  products: [Product!]! @relation(name: "SubCategoryToProduct",onDelete: CASCADE)
+}
+
+type Brand{
+  id: ID! @id
+  name: String!
+  username: String! @unique
+  email: String! @unique
+  password: String!
+  products: [Product!]! @relation(name: "BrandToProduct",onDelete: CASCADE)
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
